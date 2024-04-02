@@ -7,6 +7,8 @@ import gdown
 from cellSegmentaion.logger import logging
 import zipfile
 from cellSegmentaion.entity.artifact_entity import DataIngestionArtifact
+from cellSegmentaion.components.data_validation import DataValidation
+from cellSegmentaion.entity.config_entity import DataValidationConfig
 
 
 class DataIngestion:
@@ -90,6 +92,12 @@ class DataIngestion:
 # python -m cellSegmentaion.components.data_ingestion
 if __name__=="__main__":
     ing_obj = DataIngestion()
-    # zip_file_path=ing_obj.download_data()
-    # ing_obj.extract_zip_file(zip_file_path)
-    ing_obj.initiate_data_ingestion()
+
+    feature_path = ing_obj.initiate_data_ingestion()
+
+    val_path =DataValidationConfig()
+
+    val_obj = DataValidation(data_ingesion_artifact=feature_path,data_validation_config=val_path)
+    
+    val_status=val_obj.validate_all_files_exist()
+    print(val_status)

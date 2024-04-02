@@ -6,3 +6,6 @@ class DataIngestionArtifact: # embed two return path strings in a single class
     feature_store_path:str
 
 
+@dataclass
+class DataValidationArtifact:
+    validation_status:bool
