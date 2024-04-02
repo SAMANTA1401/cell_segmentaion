@@ -5,7 +5,8 @@ import os
 import logging
 import gdown
 from cellSegmentaion.logger import logging
-
+import zipfile
+from cellSegmentaion.entity.artifact_entity import DataIngestionArtifact
 
 
 class DataIngestion:
@@ -43,10 +44,52 @@ class DataIngestion:
         except Exception as e:
             raise logging.info(AppException(e,sys))
 
+    
+    def extract_zip_file(self,zip_file_path:str)->str:
+        """
+        zip_file_path:str
+        extract the zip file into the data directory
+        function returns none 
+        """
+        try:
+            feature_store_path = self.data_ingestion_config.feature_store_file_path
+
+            os.makedirs(feature_store_path, exist_ok=True)
+
+            with zipfile.ZipFile(zip_file_path,'r') as zip_ref:
+                zip_ref.extractall(feature_store_path)
+
+            logging.info(f"Zip file extracted")
+
+            return feature_store_path
         
+        except Exception as e:
+            raise logging.info(AppException(e, sys))
+
+    def initiate_data_ingestion(self)->str:
+        logging.info("Entered initiate data ingestion method of data ingestion class")
+        try:
+            zip_file_path = self.download_data()
+            feature_store_path = self.extract_zip_file(zip_file_path)
+
+            data_ingestion_artifact = DataIngestionArtifact(   #embed two return path strings in a single class
+                data_zip_file_path=zip_file_path,
+                feature_store_path=feature_store_path
+            )
+
+            logging.info("Exited initiate_data_ingestion method of data_ingestion_class")
+            logging.info(f"Data ingestion artifact:{data_ingestion_artifact}")
+
+            return data_ingestion_artifact
+        
+        except Exception as e:
+            raise logging.info(AppException(e, sys))
+
 
 # python cellSegmentaion\components\data_ingestion.py
 # python -m cellSegmentaion.components.data_ingestion
 if __name__=="__main__":
     ing_obj = DataIngestion()
-    ing_obj.download_data()
+    # zip_file_path=ing_obj.download_data()
+    # ing_obj.extract_zip_file(zip_file_path)
+    ing_obj.initiate_data_ingestion()
