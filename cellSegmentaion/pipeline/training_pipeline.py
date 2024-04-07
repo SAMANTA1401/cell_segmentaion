@@ -1,8 +1,9 @@
-from cellSegmentaion.entity.config_entity import DataIngestionConfig, DataValidationConfig
+from cellSegmentaion.entity.config_entity import DataIngestionConfig, DataValidationConfig, ModelTrainerConfig
 from cellSegmentaion.logger import logging
-from cellSegmentaion.entity.artifact_entity import DataIngestionArtifact
+from cellSegmentaion.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact
 from cellSegmentaion.components.data_ingestion import DataIngestion
 from cellSegmentaion.components.data_validation import DataValidation
+from cellSegmentaion.components.model_trainer import ModelTrainer
 import sys
 from cellSegmentaion.exception import AppException
 
@@ -12,7 +13,7 @@ class TrainPipeline:
     def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
         self.data_validation_config = DataValidationConfig()
-        # self.model_trainer_config = ModelTrainerConfig()
+        self.model_trainer_config = ModelTrainerConfig()
 
     def start_data_ingestion(self) -> DataIngestionArtifact:
         try:
@@ -52,6 +53,20 @@ class TrainPipeline:
 
         except Exception as e:
             raise logging.info(AppException(e, sys))
+
+
+    def start_model_trainer(self)->ModelTrainerArtifact:
+        try:
+            model_trainer = ModelTrainer(
+                model_trainer_config=self.model_trainer_config
+            )
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
+
+            return model_trainer_artifact
+        
+        except Exception as e:
+            raise logging.info(AppException(e, sys))
+
         
 
     
@@ -63,8 +78,18 @@ class TrainPipeline:
             data_validation_artifact = self.start_data_validation(
                 data_ingestion_artifact=data_ingestion_artifact
                 )
+            
+            if data_validation_artifact.validation_status == True:
+                model_trainer_artifact = self.start_model_trainer()
+            else:
+                raise Exception("Data Validation Failed")
+
+
+
         except Exception as e:
             raise logging.info(AppException(e, sys))
+        
+        
         
 # python -m cellSegmentaion.pipeline.training_pipeline
 if __name__=="__main__":

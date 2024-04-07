@@ -1,0 +1,11 @@
+{% extends "app.html" %}
+{% block content %}
+<div class=" flex-container">
+
+    <div><img src="{{url_for('static',filename='inputImage.jpg')}}" alt="input image" id="input_image"></div>
+
+
+    <div><img src="{{url_for('static',filename='output/inputImage.jpg')}}" alt="output image" id="output_image"></div>
+
+</div>
+{% endblock %}

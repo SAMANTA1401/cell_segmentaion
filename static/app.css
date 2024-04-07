@@ -1,0 +1,43 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+    height: 100vh;
+}
+#display_image{
+    width: 375px;
+    height: 375px;
+    border: 1px solid black;
+    background-position: center;
+    background-size: cover;
+    color: green;
+}
+#input_image {
+    width: 375px;
+    height: 375px;
+    border: 1px solid black;
+    background-position: center;
+    background-size: cover;
+    color: green;
+}
+#output_image {
+    display:flex;
+    width: 375px;
+    height: 375px;
+    border: 1px solid black;
+    background-position: center;
+    background-size: cover;
+    color: green;
+}
+.flex-container{
+    display: flex;
+    gap: 10px;
+}
+/* 
+100 You shouldn't need to do anything special with Flask to get CSS to work. Maybe you' re putting style.css in flask_project/stylesheets/? Unless properly configured,
+such directories won't be served by your application. Check out the Static Files section of the Flask Quickstart for some more information on this. But, in summary, this is what you' d want to do: Move static files you need to project_root/static/. Let's assume that you moved stylesheets/style.css into project_root/static/stylesheets/style.css.
+
+Change <link ... href="/stylesheets/style.css" />to <link ... href="{{ url_for('static', filename='stylesheets/style.css') }}" />This tells the template parser (Jinja2) to tell Flask to find the configured static directory in your project directory (by default, static/) and return the path of the file. If you really wanted to,
+you could just set the path as /static/stylesheets/style.css. But you really shouldn't do that - using url_for allows you to switch your static directory and still have things work, among other advantages. */

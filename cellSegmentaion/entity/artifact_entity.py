@@ -9,3 +9,7 @@ class DataIngestionArtifact: # embed two return path strings in a single class
 @dataclass
 class DataValidationArtifact:
     validation_status:bool
+
+@dataclass
+class ModelTrainerArtifact:
+    trained_model_file_path:str
